@@ -347,7 +347,8 @@ context_list = ...
 client.add_operations(agent_id, context_list)
 print("Successfully added initial operations to agent", agent_id, "!")
 
-decision_tree = client.get_decision_tree(agent_id, 1469476800)
+dt_timestamp = 1469476800
+decision_tree = client.get_decision_tree(agent_id, dt_timestamp)
 print("The decision tree at timestamp", dt_timestamp, "is the following:")
 print(decision_tree)
 
