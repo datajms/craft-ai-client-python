@@ -169,7 +169,8 @@ context_list = [
     {
         "timestamp": 1469473560,
         "context": {
-            "peopleCount": 0
+            "peopleCount": 0,
+            "lightbulbState": "OFF"
         }
     }
 ]
@@ -201,96 +202,127 @@ context_list = ...
 client.add_operations(agent_id, context_list)
 print("Successfully added initial operations to agent", agent_id, "!")
 
-decision_tree = client.get_decision_tree(agent_id, 1469476800)
+dt_timestamp = 1469476800
+decision_tree = client.get_decision_tree(agent_id, dt_timestamp)
 print("The full decision tree at timestamp", dt_timestamp, "is the following:")
 print(decision_tree)
 """ Outputed tree is the following
   {
-    "_version": "1.0.0",
-    "configuration": {
-      "context": {
-        "peopleCount": {
-          "type": "continuous"
-        },
-        "timeOfDay": {
-          "type": "time_of_day",
-          "is_generated": true
-        },
-        "timezone": {
-          "type": "timezone"
-        },
-        "lightbulbState": {
-          "type": "enum"
-        }
-      },
-      "output": [
-        "lightbulbState"
-      ],
-      "time_quantum": 600,
-      "learning_period": 108000
-    },
-    "trees": {
-      "lightbulbState": {
-        "children": [
+    '_version':'1.1.0',
+    'trees':{
+      'lightbulbState':{
+        'children':[
           {
-            "children": [
+            'children':[
               {
-                "children": [
-                  {
-                    "confidence": 0.9545537233352661,
-                    "decision_rule": {
-                      "operator": "continuous.lessthan",
-                      "operand": 1,
-                      "property": "peopleCount"
-                    },
-                    "predicted_value": "OFF"
-                  },
-                  {
-                    "confidence": 0.8630361557006836,
-                    "decision_rule": {
-                      "operator": ">=",
-                      "operand": 1,
-                      "property": "peopleCount"
-                    },
-                    "predicted_value": "ON"
-                  }
-                ],
-                "decision_rule": {
-                  "operator": "<",
-                  "operand": 5.666666507720947,
-                  "property": "timeOfDay"
-                }
+                'confidence':0.6774609088897705,
+                'decision_rule':{
+                  'operand':0.5,
+                  'operator':'<',
+                  'property':'peopleCount'
+                },
+                'predicted_value':'OFF'
               },
               {
-                "confidence": 0.9947378635406494,
-                "decision_rule": {
-                  "operator": ">=",
-                  "operand": 5.666666507720947,
-                  "property": "timeOfDay"
+                'confidence':0.8630361557006836,
+                'decision_rule':{
+                  'operand':0.5,
+                  'operator':'>=',
+                  'property':'peopleCount'
                 },
-                "predicted_value": "OFF"
+                'predicted_value':'ON'
               }
             ],
-            "decision_rule": {
-              "operator": "<",
-              "operand": 20.66666603088379,
-              "property": "timeOfDay"
+            'decision_rule':{
+              'operand':[
+                5,
+                5.6666665
+              ],
+              'operator':'[in[',
+              'property':'timeOfDay'
             }
           },
           {
-            "confidence": 0.8630361557006836,
-            "decision_rule": {
-              "operator": ">=",
-              "operand": 20.66666603088379,
-              "property": "timeOfDay"
-            },
-            "predicted_value": "ON"
+            'children':[
+              {
+                'confidence':0.9947378635406494,
+                'decision_rule':{
+                  'operand':[
+                    5.6666665,
+                    20.666666
+                  ],
+                  'operator':'[in[',
+                  'property':'timeOfDay'
+                },
+                'predicted_value':'OFF'
+              },
+              {
+                'children':[
+                  {
+                    'confidence':0.969236433506012,
+                    'decision_rule':{
+                      'operand':1,
+                      'operator':'<',
+                      'property':'peopleCount'
+                    },
+                    'predicted_value':'OFF'
+                  },
+                  {
+                    'confidence':0.8630361557006836,
+                    'decision_rule':{
+                      'operand':1,
+                      'operator':'>=',
+                      'property':'peopleCount'
+                    },
+                    'predicted_value':'ON'
+                  }
+                ],
+                'decision_rule':{
+                  'operand':[
+                    20.666666,
+                    5
+                  ],
+                  'operator':'[in[',
+                  'property':'timeOfDay'
+                }
+              }
+            ],
+            'decision_rule':{
+              'operand':[
+                5.6666665,
+                5
+              ],
+              'operator':'[in[',
+              'property':'timeOfDay'
+            }
           }
-        ],
+        ]
       }
+    },
+    'configuration':{
+      'time_quantum':600,
+      'learning_period':9000000,
+      'context':{
+        'peopleCount':{
+          'type':'continuous'
+        },
+        'timeOfDay':{
+          'type':'time_of_day',
+          'is_generated':True
+        },
+        'timezone':{
+          'type':'timezone'
+        },
+        'lightbulbState':{
+          'type':'enum'
+        }
+      },
+      'output':[
+        'lightbulbState'
+      ]
     }
-  ]
-  """
+  }
+"""
 ```
 
 Try to retrieve the tree at different timestamps to see how it gradually learns from the new operations. To visualize the trees, use the [inspector](https://beta.craft.ai/inspector)!
